@@ -14,6 +14,7 @@ local test_started = false
 local test_time = 5 -- Time of end of first test
 local test_period = 5 --Period of each test
 local end_test_time = 60 --Time at which test is ended
+local target_pwm = 1000 -- Default to off if outside bounds
 
 function update()
     -- Check if the vehicle is armed
@@ -36,9 +37,8 @@ function update()
 
     -- Convert cycles to total seconds elapsed
     local seconds_elapsed = (cycles * UPDATE_RATE_MS) / 1000
-    local target_pwm = 1000 -- Default to off if outside bounds
 
-    if seconds_elapsed < end_test_time then
+    if seconds_elapsed < test_time then
         -- Calculates a smooth sine wave cycle across the 12-second window (oscillating between 1100 and 1300 PWM)        
         for i = 1, #MOTOR_CHANNELS do
             SRV_Channels:set_output_pwm_chan_timeout(
