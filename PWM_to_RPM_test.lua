@@ -2,7 +2,6 @@
 local MOTOR_CHANNELS = {9, 10, 11, 12} -- Internal 0-indexed channels (SERVO9, 10, 11, 12)
 
 -- Desired motor PWM
-local PWM_BASE = 1200
 local TIMEOUT_MS = 500
 local UPDATE_RATE_MS = 100 -- Run every 100ms
 
@@ -10,11 +9,15 @@ local UPDATE_RATE_MS = 100 -- Run every 100ms
 local cycles = 0
 local test_started = false
 
--- Initialize Test Parameters
-local test_time = 5 -- Time of end of first test
-local test_period = 5 --Period of each test
-local end_test_time = 60 --Time at which test is ended
-local target_pwm = 1000 -- Default to off if outside bounds
+-- Initialize PWM Variables that don't change between tests
+local extra_pwm = 0 --perturbation from the target_pwm
+
+-- Test Inputs
+local test_period = 2 --Period of each test in seconds
+local test_time = test_period -- Time of end of first test
+local min_pwm = 1100 -- minimum pwm 
+local max_pwm = 1300 --Maximum allowed pwm
+local pwm_step = 50 --How much pwm is incremented by for each step
 
 function update()
     -- Check if the vehicle is armed
@@ -37,8 +40,9 @@ function update()
 
     -- Convert cycles to total seconds elapsed
     local seconds_elapsed = (cycles * UPDATE_RATE_MS) / 1000
+    local target_pwm = min_pwm + extra_pwm --updates the amount of pwm
 
-    if seconds_elapsed < test_time then
+    if target_pwm <= max_pwm and test_period >= seconds_elapsed and target_pwm <= max_pwm then
         -- Calculates a smooth sine wave cycle across the 12-second window (oscillating between 1100 and 1300 PWM)        
         for i = 1, #MOTOR_CHANNELS do
             SRV_Channels:set_output_pwm_chan_timeout(
@@ -48,9 +52,9 @@ function update()
             )
         end
 
-    elseif end_test_time >= seconds_elapsed and target_pwm < 2000 then
-        target_pwm = target_pwm + 50 --Increments the PWM by 50
-        end_test_time = end_test_time + test_period
+    elseif target_pwm < max_pwm then
+        test_period = test_time + test_period --increases the test time
+        extra_pwm = extra_pwm + pwm_step --Increments the PWM by 50
 
     else
         -- Past 12 seconds, stop overriding and exit the script loop
