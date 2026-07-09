@@ -19,11 +19,6 @@ local start_time = nil
 
 function update()
   -- 1. Pre-flight Safety Checks
-  if not vehicle:get_armed() then
-    gcs:send_text(6, "Lua: Waiting for arm...")
-    return update, 2000
-  end
-
   if vehicle:get_mode() ~= guided_mode then
     gcs:send_text(6, "Lua: Switching to GUIDED mode...")
     vehicle:set_mode(guided_mode)
