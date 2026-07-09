@@ -2,7 +2,8 @@
 -- --- CONFIGURATION ---
 local lat_amplitude = 0.0001    -- How far North/South it moves (~11 meters)
 local lng_amplitude = 0.0001    -- How far East/West it moves (~9 meters)
-local alt_amplitude = 5         -- How far up/down it moves (meters)
+local alt_amplitude = 2         -- Reduced slightly to prevent "Thrust Loss" motor saturation
+local alt_offset_base = 5       -- Added a base altitude so it stays safely in the air
 
 local lat_period = 30           -- Time in seconds to complete one Lat cycle
 local lng_period = 45           -- Time in seconds to complete one Lng cycle
@@ -21,10 +22,11 @@ local update_trajectory
 -- 1. INITIALIZATION FUNCTION: Runs repeatedly until GPS lock is solid
 function init_position()
   local current_pos = ahrs:get_location()
-  local position_ned = ahrs:get_relative_position_NED()
+  -- Correct API method name is get_relative_position_NED_home()
+  local position_ned = ahrs:get_relative_position_NED_home()
 
-  -- Ensure BOTH the global location and local position vectors are populated
-  if not current_pos or not position_ned then
+  -- ArduPilot returns 'false' (boolean) if NED position isn't ready yet
+  if not current_pos or (position_ned == false) then
     gcs:send_text(4, "Lua Init: Waiting for absolute & relative position lock...")
     return init_position, 2000 -- Retry in 2 seconds
   end
@@ -32,6 +34,7 @@ function init_position()
   -- Cache values into variables immediately (never nil past this point)
   center_lat = current_pos:lat() / 1e7
   center_lng = current_pos:lng() / 1e7
+  -- Z is downward in NED coordinates, so flipping the sign gives us a positive height
   center_alt = -position_ned:z()
   start_time = millis():tofloat() / 1000.0
 
@@ -44,7 +47,7 @@ end
 -- 2. MAIN RUNTIME FUNCTION: Only executes once position variables are guaranteed integers/floats
 function update_trajectory()
   -- Pre-flight Safety Checks
-  if not vehicle:get_armed() then
+  if not arming:is_armed() then
     gcs:send_text(6, "Lua: Waiting for arm...")
     return update_trajectory, 2000
   end
@@ -58,10 +61,13 @@ function update_trajectory()
   -- Calculate elapsed time
   local current_time = (millis():tofloat() / 1000.0) - start_time
 
-  -- Calculate sinusoidal offsets (variables are 100% guaranteed to be non-null here)
+  -- Calculate sinusoidal offsets
   local current_lat = center_lat + lat_amplitude * math.sin(2 * math.pi * current_time / lat_period)
   local current_lng = center_lng + lng_amplitude * math.sin(4 * math.pi * current_time / lng_period)
-  local current_alt = center_alt + alt_amplitude * math.sin(8 * math.pi * current_time / alt_period)
+  
+  -- Modified Alt logic: swings up and down around (center altitude + a base offset) 
+  -- so it doesn't accidentally dive straight back down into the ground.
+  local current_alt = center_alt + alt_offset_base + alt_amplitude * math.sin(2 * math.pi * current_time / alt_period)
 
   -- Convert and apply to the Location object
   target_loc:lat(math.floor(current_lat * 1e7))
@@ -69,8 +75,8 @@ function update_trajectory()
   target_loc:alt(math.floor(current_alt * 100))
   target_loc:relative_alt(true)
 
-  -- Command the vehicle to the destination
-  vehicle:set_wp_destination(target_loc)
+  -- FIX: Changed 'vehicle:set_wp_destination(target_loc)' to 'vehicle:set_target_location(target_loc)'
+  vehicle:set_target_location(target_loc)
 
   return update_trajectory, 1000 
 end
