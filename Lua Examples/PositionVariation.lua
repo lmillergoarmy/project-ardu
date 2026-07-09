@@ -56,8 +56,8 @@ function update()
 
   -- 4. Calculate sinusoidal offsets from the dynamic center
   local current_lat = center_lat + lat_amplitude * math.sin(2 * math.pi * current_time / lat_period)
-  local current_lng = center_lng + lng_amplitude * math.sin(2 * math.pi * current_time / lng_period)
-  local current_alt = center_alt + alt_amplitude * math.sin(2 * math.pi * current_time / alt_period)
+  local current_lng = center_lng + lng_amplitude * math.sin(4 * math.pi * current_time / lng_period)
+  local current_alt = center_alt + alt_amplitude * math.sin(8 * math.pi * current_time / alt_period)
 
   -- 5. Convert and apply to the Location object
   target_loc:lat(math.floor(current_lat * 1e7))
