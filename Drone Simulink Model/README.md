@@ -1,1 +1,8 @@
-This folder contains the drone simulink model that is used to validate lua scripting.
+# Drone Simulink Model Setup
+
+## Required Software
+
+* a
+* b
+* c
+
