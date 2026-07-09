@@ -2,8 +2,9 @@
 
 ## Required Software
 
-* MatLab
+* MatLab Software
   * **[UAV Toolbox Support Package for ArduPilot Autopilots](https://www.mathworks.com/help/releases/R2026a/uav/ardupilot/ug/install-ardupilot-autopilot.html)**
+    * This software is used to directly interface with mission planner using the simulink model
   * [Embedded Coder](https://www.mathworks.com/help/ecoder/index.html)
   * [MATLAB Coder](https://www.mathworks.com/help/coder/index.html)
   * [Simulink](https://www.mathworks.com/help/simulink/index.html)
