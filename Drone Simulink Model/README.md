@@ -16,5 +16,10 @@
 
 * Missionplanner
   * [Missionplanner Installation Guide](https://ardupilot.org/planner/docs/mission-planner-installation.html)
-  * 
+ 
+* Ardupilot Build Setup
+  * [Setting Up the Build Environment](https://ardupilot.org/dev/docs/building-setup-linux.html)
+
+ ## Simulink Model Startup
+ 
 
