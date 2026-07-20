@@ -21,5 +21,7 @@
   * [Setting Up the Build Environment](https://ardupilot.org/dev/docs/building-setup-linux.html)
 
  ## Simulink Model Startup
+
+ * [Matlab Example](https://www.mathworks.com/help/uav/ardupilot/ref/ardupilot-sitl-quadcopter-plant-simulink.html)
  
 
