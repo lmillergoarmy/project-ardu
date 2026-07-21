@@ -65,8 +65,26 @@ end
 
 
 function preload_file(file)
+local t0 = 0 --Dummy variable to hold initial for line block
+local X0 = 0 --Dummy variable to hold initial X value for line block
+local Y0 = 0 --Dummy variable to hold initial Y value for line block
+local Z0 = 0 --Dummy variable to hold initial Z value for line block
+ 
+  if csv_data[#csv_data] then --Stores the last values of the 
+    t0 = csv_data[#csv_data].time
+    X0 = csv_data[#csv_data].X
+    Y0 = csv_data[#csv_data].Y
+    Z0 = csv_data[#csv_data].Z
+  end
+
   current_index = 1 --Resets the index so that that find_nearest_data knows to start from the bottom of the table
   csv_data = {} -- Resets the table so that the old lines are overwriten as not to bloat size
+
+  if t0 then
+    table.insert(csv_datam {time = t0, X = X0, Y = Y0, Z = Z0}) --Last values of the previous table are the first values of the new table
+  end
+
+
 
   -- Read a chunk of lines (e.g., 20 lines at a time) in each cycle
   for i = 1, line_block do
