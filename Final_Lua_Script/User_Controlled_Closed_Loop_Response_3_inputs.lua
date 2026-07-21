@@ -147,8 +147,8 @@ function update()
     elseif elapsed_time < csv_data[#csv_data].time then --If the code has reached this point then then it is ready to find the value to be written
       local pos1, pos2 = find_nearest_data(elapsed_time) --find the two times closest to the current time
       local delta_position_latitude = latlng_amp*interpolate(pos1.time, pos1.X, pos2.time, pos2.X, elapsed_time) -- find the change in latitude from the trimmed condition
-      local delta_position_longitude = latlng_amp*interpolate(pos1.time, pos1.y, pos2.time, pos2.y, elapsed_time) -- find the change in longitude from the trimmed condition
-      local delta_position_altitude = alt_amp*interpolate(pos1.time, pos1.y, pos2.time, pos2.y, elapsed_time) -- find the change in altitude from the trimmed condition
+      local delta_position_longitude = latlng_amp*interpolate(pos1.time, pos1.Y, pos2.time, pos2.Y, elapsed_time) -- find the change in longitude from the trimmed condition
+      local delta_position_altitude = alt_amp*interpolate(pos1.time, pos1.Z, pos2.time, pos2.Z, elapsed_time) -- find the change in altitude from the trimmed condition
 
       --Update the target_position variable so the drone knows where to go 
       target_pos:lat(math.floor((trimmed_lat + delta_position_latitude) * 1e7))
@@ -184,8 +184,8 @@ function update()
 
       local att1, att2 = find_nearest_data(elapsed_time)
       local delta_roll = att_amp*interpolate(att1.time, att1.X, att2.time, att2.X, elapsed_time) -- find the change in roll from the trimmed condition 
-      local delta_pitch = att_amp*interpolate(att1.time, att1.y, att2.time, att2.y, elapsed_time) -- find the change in pitch from the trimmed condition  
-      local delta_yaw = att_amp*interpolate(att1.time, att1.z, att2.time, att2.z, elapsed_time) -- find the change in yaw from the trimmed condition  
+      local delta_pitch = att_amp*interpolate(att1.time, att1.Y, att2.time, att2.Y, elapsed_time) -- find the change in pitch from the trimmed condition  
+      local delta_yaw = att_amp*interpolate(att1.time, att1.Z, att2.time, att2.Z, elapsed_time) -- find the change in yaw from the trimmed condition  
     
       --IF USING TRIMMED CONDITION SUM THAT WITH THE DELTA TERMS TO GET ACTUAL INPUT
 
@@ -219,8 +219,8 @@ function update()
     elseif elapsed_time < csv_data[#csv_data].time then --If the code has reached this point then then it is ready to find the value to be written
       local vel1, vel2 = find_nearest_data(elapsed_time) --find the two times in the csv closest to the current time
       local delta_velocity_north = vel_amp*interpolate(vel1.time, vel1.X, vel2.time, vel2.X, elapsed_time) -- find the change in velocity from the trimmed condition in the North direction 
-      local delta_velocity_east = vel_amp*interpolate(vel1.time, vel1.y, vel2.time, vel2.y, elapsed_time) -- find the change in velocity from the trimmed condition in the East direction  
-      local delta_velocity_down = vel_amp*interpolate(vel1.time, vel1.z, vel2.time, vel2.z, elapsed_time) -- find the change in velocity from the trimmed condition in the Down direction  
+      local delta_velocity_east = vel_amp*interpolate(vel1.time, vel1.Y, vel2.time, vel2.Y, elapsed_time) -- find the change in velocity from the trimmed condition in the East direction  
+      local delta_velocity_down = vel_amp*interpolate(vel1.time, vel1.Z, vel2.time, vel2.Z, elapsed_time) -- find the change in velocity from the trimmed condition in the Down direction  
 
       local perturbed_velocity = Vector3f() --Creates a vector 3f object to give to the autopilot to perturb velocity 
       --Insert the values into the the Vector3f object
