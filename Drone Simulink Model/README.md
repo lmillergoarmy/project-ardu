@@ -22,7 +22,7 @@
 
  ## Simulink Model Startup
 
- * [Matlab Example](https://www.mathworks.com/help/uav/ardupilot/ref/ardupilot-sitl-quadcopter-plant-simulink.html)
+* [Matlab Example](https://www.mathworks.com/help/uav/ardupilot/ref/ardupilot-sitl-quadcopter-plant-simulink.html)
   * **Key Points**:
     * Make sure the right IP is used in setup
     * 2 separate instances of MATLAB are necessary
