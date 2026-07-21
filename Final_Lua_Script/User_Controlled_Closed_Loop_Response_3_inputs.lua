@@ -173,8 +173,6 @@ function update()
       target_pos:lng(math.floor((trimmed_lng + delta_position_longitude) * 1e7))
       target_pos:alt(math.floor((trimmed_alt + delta_position_altitude) * 100)) --MIGHT NEED TO CHANGE CONSTANT MULIPLE 
       target_pos:relative_alt(true)
-
-      gcs:send_text(6, "Lat: " .. tostring(trimmed_lat) .. " Lng: " .. tostring(trimmed_lng) .. " Alt: " .. tostring(trimmed_alt))
       
       --Send new position to the drone
       vehicle:set_target_location(target_pos)
