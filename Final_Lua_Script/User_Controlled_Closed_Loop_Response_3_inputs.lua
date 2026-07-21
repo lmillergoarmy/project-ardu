@@ -13,7 +13,7 @@ local csv_fully_loaded = false --Allows the code to detect when the csv is finis
 local test_started = false --Monitors if the code has been started 
 
 --Temporary Boolean Values, intended to be controlled by an external device
-local pos_Flag = false --Flags if a Position test is being conducted
+local pos_Flag = true --Flags if a Position test is being conducted
 local att_Flag = false --Flags if a Attitude test if being conducted 
 local vel_Flag = false --Flags if a velocity test is being conducted
 
@@ -40,14 +40,14 @@ local update_rate_ms = 0 --Determined the update rate of the Update() function
 --Note: How this works is that it runs the code then waits the time required, Note for future usage: If this is used to keep track of time it will create steady state error in your timekeeping
 
 --Uneeded inputs (REMOVE THIS MARKER ONCE FINISHED WITH CODE AND MAKE SURE TO ADD UNITS FOR FINAL CODE)
-local latlng_amp = 1 -- Amplitude of the Position multisine for latitude and longitude
-local alt_amp = 1 --Amplitude of Altititude Multsine 
+local latlng_amp = 0.0001 -- Amplitude of the Position multisine for latitude and longitude
+local alt_amp = 2 --Amplitude of Altititude Multsine 
 
 local vel_amp = 1 -- Amplitude of the Velocity multisine
 local att_amp = 1 -- Amplitude of the Attitude multisine
 
 --Test inputs: Inputs for use on the static testbed for code validation
-local test_Flag = true --Flags if a test using pwm is being conducted, used for bug testing before simulink model is active
+local test_Flag = false --Flags if a test using pwm is being conducted, used for bug testing before simulink model is active
 local test_amp = 1 --Amplitude of test PWM
 local baseline_pwm = 1400 --Represents a velocity/ position hold to vary from
 
