@@ -128,6 +128,7 @@ function update()
     if not File then --Checks if the file is opened and if it isn't it attempts to open it
       csv_fully_loaded = false --Sets the file to not fully loaded before
       open_file(file_name)
+      gcs:send_text(6, "Started Position Test")
 
       local current_pos = ahrs:get_location() --Get the current location in latitude and longitude
       local position_ned = ahrs:get_relative_position_NED_home() --Used to find the altitude for usage
@@ -155,6 +156,8 @@ function update()
       target_pos:alt(math.floor((trimmed_alt + delta_position_altitude) * 100)) --MIGHT NEED TO CHANGE CONSTANT MULIPLE 
       target_pos:relative_alt(true)
 
+      gcs:send_text(6, "Lat: " .. tostring(trimmed_lat) .. " Lng: " .. tostring(trimmed_lng) .. " alt: " tostring(trimmed_alt))
+      
       --Send new position to the drone
       vehicle:set_target_location(target_pos)
 
