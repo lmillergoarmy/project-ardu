@@ -120,7 +120,7 @@ function update()
       test_started = true
   end
 
-   local elapsed_time = millis():tofloat() - initial_time --Finds the elapsed time since the file was opened
+  local elapsed_time = millis():tofloat() - initial_time --Finds the elapsed time since the file was opened
 
   --This code uses if statements to determine when the test is started and which one it is
   --NOTE: POTENTIAL ERROR IN USEAGE, IF TEST SWITCHED PREMATURELY THEN IT MIGHT NOT START AT THE CORRECT LOCATION IN CSV, either fix in code or guard against in usage (Perhaps don't allow test to be changed until test is complete, with provisions given for imediate terimination of script if something goes wrong)
@@ -192,7 +192,7 @@ function update()
     else --If the code has reached this point csv_fully_loaded has been marked, sets variable to false to stop testing algorithim
       gcs:send_text(6, "Attitude test has finished, ready for next test.")
       File = nil
-      test_Flag = false
+      att_Flag = false
     end
 
   elseif vel_Flag then
@@ -239,12 +239,14 @@ function update()
       csv_fully_loaded = false --Sets the file to not fully loaded before
       open_file(file_name)
       preload_file(File) --Preloads the first block of data associated with the file
+      
+      initial_time = millis():tofloat() -- Sets the initial time of the test in ms       
     elseif elapsed_time >= csv_data[#csv_data].time and not csv_fully_loaded then -- Controls when the next block of the csv file is read, time is assumed to be kept in ms 
       preload_file(File)
     elseif elapsed_time < csv_data[#csv_data].time then --If the code has reached this point then then it is ready to find the value to be written
       local data1, data2 = find_nearest_data(elapsed_time) --find the two times closest to the current time
       local interpolated_pwm = test_amp*interpolate(data1.time, data1.X, data2.time, data2.X, elapsed_time) --Interpolate between the two data points to find required pwm 
-      gcs:send_text(6, tostring(interpolated_pwm))
+      gcs:send_text(6, "val: " .. tostring(interpolated_pwm) .. ", time: " .. tostring(elapsed_time))
     else --If the code has reached this point csv_fully_loaded has been marked, sets variable to false to stop testing algorithim
       gcs:send_text(6, "Test test has finished, ready for next test.")
       File = nil
