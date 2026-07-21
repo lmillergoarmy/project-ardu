@@ -81,7 +81,7 @@ local Z0 = 0 --Dummy variable to hold initial Z value for line block
   csv_data = {} -- Resets the table so that the old lines are overwriten as not to bloat size
 
   if t0 then
-    table.insert(csv_datam {time = t0, X = X0, Y = Y0, Z = Z0}) --Last values of the previous table are the first values of the new table
+    table.insert(csv_data, {time = t0, X = X0, Y = Y0, Z = Z0}) --Last values of the previous table are the first values of the new table
   end
 
 
